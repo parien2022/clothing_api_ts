@@ -31,21 +31,23 @@ class ClothesController {
         }
     }
 
-    public async getById(req: Request, res: Response): Promise<any> {
+    public async getById(req: Request, res: Response): Promise<void> {
         try{
             await this.initializeDb();
             if(!this.db){
                 throw new Error('Database not initialized');
             }
             else if(!ObjectId.isValid(req.params.id)){
-                return res.status(400).json({message: 'Must use a valid clothes id'});
+                res.status(400).json({message: 'Must use a valid clothes id'});
+                return;
             }
 
             const clothesId = new ObjectId(req.params.id);
             const clothes = await this.db.collection('clothes').find({_id: clothesId}).toArray();
 
             if (clothes.length == 0){
-                return res.status(404).json({message: 'Clothes not found'});
+                res.status(404).json({message: 'Clothes not found'});
+                return;
             }
 
             res.setHeader('Content-Type', 'application/json');
@@ -55,7 +57,7 @@ class ClothesController {
         }
     }
 
-    public async createClothes(req: Request, res: Response): Promise<any> {
+    public async createClothes(req: Request, res: Response): Promise<void> {
         try{
             await this.initializeDb();
             if(!this.db){
@@ -79,14 +81,15 @@ class ClothesController {
         }
     }
 
-    public async updateClothes(req: Request, res: Response): Promise<any> {
+    public async updateClothes(req: Request, res: Response): Promise<void> {
         try{
             await this.initializeDb();
             if(!this.db){
                 throw new Error('Database not initialized');
             }
             else if(!ObjectId.isValid(req.params.id)){
-                return res.status(400).json({message: 'Must use a valid clothes id'});
+                res.status(400).json({message: 'Must use a valid clothes id'});
+                return;
             }
 
             const clothes = {
@@ -109,14 +112,15 @@ class ClothesController {
         }
     }
 
-    public async deleteClothes(req: Request, res: Response): Promise<any> {
+    public async deleteClothes(req: Request, res: Response): Promise<void> {
         try{
             await this.initializeDb();
             if(!this.db){
                 throw new Error('Database not initialized');
             }
             else if(!ObjectId.isValid(req.params.id)){
-                return res.status(400).json({message: 'Must use a valid clothes id'});
+                res.status(400).json({message: 'Must use a valid clothes id'});
+                return;
             }
 
             const clothesId = new ObjectId(req.params.id);
