@@ -1,0 +1,72 @@
+[
+    {
+      "name": "T-shirt",
+      "size": "M",
+      "color": "Black",
+      "price": 20.99,
+      "inStock": true
+    },
+    {
+      "name": "Jeans",
+      "size": "L",
+      "color": "Blue",
+      "price": 45.50,
+      "inStock": true
+    },
+    {
+      "name": "Jacket",
+      "size": "S",
+      "color": "Green",
+      "price": 89.99,
+      "inStock": false
+    },
+    {
+      "name": "Sweater",
+      "size": "M",
+      "color": "Red",
+      "price": 35.00,
+      "inStock": true
+    },
+    {
+      "name": "Shorts",
+      "size": "XL",
+      "color": "Yellow",
+      "price": 25.75,
+      "inStock": true
+    },
+    {
+      "name": "Dress",
+      "size": "S",
+      "color": "Pink",
+      "price": 55.00,
+      "inStock": false
+    },
+    {
+      "name": "Shoes",
+      "size": "42",
+      "color": "White",
+      "price": 70.00,
+      "inStock": true
+    },
+    {
+      "name": "Hat",
+      "size": "One Size",
+      "color": "Black",
+      "price": 15.99,
+      "inStock": true
+    },
+    {
+      "name": "Scarf",
+      "size": "One Size",
+      "color": "Grey",
+      "price": 12.50,
+      "inStock": true
+    },
+    {
+      "name": "Gloves",
+      "size": "M",
+      "color": "Brown",
+      "price": 18.25,
+      "inStock": false
+    }
+  ]
