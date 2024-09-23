@@ -1,22 +1,35 @@
-import express from 'express';
+import express, { Application } from 'express';
 import dotenv from 'dotenv';
-const mongodb = require("./db/connection");
+import db from './db/Database'
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { printHelloWorld } from './routes/clothing';
+import ClothesRoutes from './routes/ClothesRoutes';
 
 dotenv.config();
 
-const app = express();
-const PORT = process.env.PORT || 3011;
+class App {
 
-app
-    .use(express.json())
-    .use(bodyParser.json())
-    .use(bodyParser.urlencoded({ extended: true }))
+    public app: Application;
+    private port: number | string;
 
-    .use((req, res, next) => {
+    constructor(){
+        this.app = express(),
+        this.port = process.env.PORT || 3011;
+        this.initializeMiddlewares();
+        this.initializeRoutes();
+        this.initializeDbAndStartServer();
+    }
 
+
+    private initializeMiddlewares() {
+        this.app.use(express.json());
+        this.app.use(bodyParser.json());
+        this.app.use(bodyParser.urlencoded({ extended: true }));
+        this.app.use(cors({ methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH']}));
+        this.app.use(this.setupHeaders);
+    }
+
+    private setupHeaders(req: express.Request, res: express.Response, next: express.NextFunction){
         res.setHeader('Access-Control-Allow-Origin', '*')
         res.setHeader(
             'Access-Control-Allow-Headers',
@@ -25,19 +38,27 @@ app
             'Acces-Control-Allow-Methods',
             'POST, GET, PUT, PATCH, OPTIONS, DELETE')
         next()
-    })
+    }
 
-    .use(cors({ methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH']}))
+    private initializeRoutes() {
+        this.app.use('/api', ClothesRoutes);
+    }
 
-    .use('/api', printHelloWorld);
+    private async initializeDbAndStartServer() {
+        try{
+            await db.startDb();
+            this.startServer();
+        } catch(err){
+            console.log('Database connection failed', err);
+        }
+    }
 
-mongodb.startDb((err: any) => {
-    if(err) {
-        console.log(err)
-    } else{
-        app.listen(PORT, () => {
-            console.log(`Database is listening and Server running on port ${PORT}`);
+    private startServer(){
+        this.app.listen(this.port, () => {
+            console.log(`Database is listening and Server running on port ${this.port}`);
         });
     }
-});
+}
+
+new App();
 
