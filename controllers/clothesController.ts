@@ -7,7 +7,7 @@ class ClothesController {
 
     constructor() {}
 
-    private async initializeDb(): Promise<void> {
+    private async getDbInstance(): Promise<void> {
         try{
             this.db = await dbObject.getDataBase();
         } catch(err){
@@ -18,7 +18,7 @@ class ClothesController {
 
     public async getAll(req: Request, res: Response): Promise<void> {
         try{
-            await this.initializeDb();
+            await this.getDbInstance();
             if(!this.db){
                 throw new Error('Database not initialized');
             }
@@ -33,7 +33,7 @@ class ClothesController {
 
     public async getById(req: Request, res: Response): Promise<void> {
         try{
-            await this.initializeDb();
+            await this.getDbInstance();
             if(!this.db){
                 throw new Error('Database not initialized');
             }
@@ -59,7 +59,7 @@ class ClothesController {
 
     public async createClothes(req: Request, res: Response): Promise<void> {
         try{
-            await this.initializeDb();
+            await this.getDbInstance();
             if(!this.db){
                 throw new Error('Database not initialized');
             }
@@ -83,7 +83,7 @@ class ClothesController {
 
     public async updateClothes(req: Request, res: Response): Promise<void> {
         try{
-            await this.initializeDb();
+            await this.getDbInstance();
             if(!this.db){
                 throw new Error('Database not initialized');
             }
@@ -114,7 +114,7 @@ class ClothesController {
 
     public async deleteClothes(req: Request, res: Response): Promise<void> {
         try{
-            await this.initializeDb();
+            await this.getDbInstance();
             if(!this.db){
                 throw new Error('Database not initialized');
             }
