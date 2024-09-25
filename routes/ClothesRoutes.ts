@@ -17,6 +17,7 @@ class ClothesRoutes {
         this.router.post('/createClothes/', (req: Request, res: Response) => ClothesController.createClothes(req, res));
         this.router.put('/updateClothes/:id', (req: Request, res: Response) => ClothesController.updateClothes(req, res));
         this.router.delete('/deleteClothes/:id', (req: Request, res: Response) => ClothesController.deleteClothes(req, res));
+        this.router.get('/getByCategoryAndSize', (req: Request, res: Response) => ClothesController.getStockBySize(req, res));
     }
     
 }

@@ -1,6 +1,14 @@
 import { Request, Response} from 'express';
 import dbObject from "../db/Database";
-import { ObjectId, Db } from 'mongodb';
+import { ObjectId, Db, WithId, Document } from 'mongodb';
+
+interface Clothes extends WithId<Document> {
+    name: string;
+    size: string;
+    color: string;
+    price: number;
+    inStock: boolean;
+}
 
 class ClothesController {
     private db: Db | null = null;
@@ -15,19 +23,31 @@ class ClothesController {
         }
     }
 
+    // Recusively iterates through a list of objects with the type Clothes[] interface and adds 1 to the
+    // totalStock variable in case is true.
+    private async getTotalStockBySizeRecursive(clothes: Clothes[], index: number= 0, totalStock: number = 0): Promise<number>{
+        if (index >= clothes.length){
+            return totalStock;
+        }
+        if (clothes[index].inStock) {
+            totalStock += 1;
+        }
+        return this.getTotalStockBySizeRecursive(clothes, index + 1, totalStock);
+    }
+
 
     public async getAll(req: Request, res: Response): Promise<void> {
         try{
             await this.getDbInstance();
             if(!this.db){
-                throw new Error('Database not initialized');
+                throw new Error('Failed to get Database instance');
             }
 
             const clothes = await this.db.collection('clothes').find().toArray();
             res.setHeader('Content-Type', 'application/json');
             res.status(200).json(clothes);
         }catch (err){
-            res.status(400).json({ message: err instanceof Error ? err.message : 'Error getting all clothess'});
+            res.status(400).json({ message: err instanceof Error ? err.message : 'Error getting all clothes'});
         }
     }
 
@@ -35,7 +55,7 @@ class ClothesController {
         try{
             await this.getDbInstance();
             if(!this.db){
-                throw new Error('Database not initialized');
+                throw new Error('Failed to get Database instance');
             }
             else if(!ObjectId.isValid(req.params.id)){
                 res.status(400).json({message: 'Must use a valid clothes id'});
@@ -61,7 +81,7 @@ class ClothesController {
         try{
             await this.getDbInstance();
             if(!this.db){
-                throw new Error('Database not initialized');
+                throw new Error('Failed to get Database instance');
             }
 
             const clothes = {
@@ -85,7 +105,7 @@ class ClothesController {
         try{
             await this.getDbInstance();
             if(!this.db){
-                throw new Error('Database not initialized');
+                throw new Error('Failed to get Database instance');
             }
             else if(!ObjectId.isValid(req.params.id)){
                 res.status(400).json({message: 'Must use a valid clothes id'});
@@ -116,7 +136,7 @@ class ClothesController {
         try{
             await this.getDbInstance();
             if(!this.db){
-                throw new Error('Database not initialized');
+                throw new Error('Failed to get Database instance');
             }
             else if(!ObjectId.isValid(req.params.id)){
                 res.status(400).json({message: 'Must use a valid clothes id'});
@@ -134,6 +154,41 @@ class ClothesController {
             res.status(500).json({ message: err instanceof Error ? err.message : 'Error deleting clothes'});
         }
     }
+
+    public async getStockBySize(req: Request, res: Response): Promise<void> {
+        try{
+            await this.getDbInstance();
+
+            if(!this.db) {
+                throw new Error('Failed to get Database instance');
+            }
+            const size = req.body.size as string;
+            if (!size) {
+                res.status(400).json({message: 'size parameter is required in the body'})
+            }
+            console.log(`Searching clothes with size: ${size} ...`);
+
+            const clothesDoc = await this.db?.collection('clothes').find({ size }).toArray();
+
+            const clothes: Clothes[] = clothesDoc.map(doc => ({
+                _id: doc._id,
+                name: doc.name,
+                size: doc.size,
+                color: doc.color,
+                price: doc.price,
+                inStock: doc.inStock
+            }));
+
+            const stock = await this.getTotalStockBySizeRecursive(clothes);
+            console.log(`Found ${stock} in stock with size ${size}`);
+            res.setHeader('Content-type', 'application/json');
+            res.status(200).json({message: 'Total stock', stock});
+        } catch(err){
+            res.status(400).json({ message: err instanceof Error ? err.message : 'Error getting clothes by category and size'});
+        }
+        
+    }
+
 
     
 }
