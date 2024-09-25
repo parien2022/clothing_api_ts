@@ -28,6 +28,7 @@ class ClothesController {
 
     // Recursively iterates through a list of objects with the type Clothes[] interface and adds 1 to the
     // totalStock variable in case is true.
+    // Sample endpoint: http://localhost:3010/api/getStockBySize
     private async getTotalStockBySizeRecursive(clothes: Clothes[], index: number= 0, totalStock: number = 0): Promise<number>{
         if (index >= clothes.length){
             return totalStock;
