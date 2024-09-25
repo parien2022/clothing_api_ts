@@ -2,6 +2,7 @@ import { Request, Response} from 'express';
 import dbObject from "../db/Database";
 import { ObjectId, Db, WithId, Document } from 'mongodb';
 
+// Sets interface with type WithId<Document> and sets object types for its properties
 interface Clothes extends WithId<Document> {
     name: string;
     size: string;
@@ -10,11 +11,13 @@ interface Clothes extends WithId<Document> {
     inStock: boolean;
 }
 
+// This class handles every interaction with MongoDB as well as NoSql Satatements related
 class ClothesController {
     private db: Db | null = null;
 
     constructor() {}
 
+    //Gets DB instance
     private async getDbInstance(): Promise<void> {
         try{
             this.db = await dbObject.getDataBase();
@@ -23,7 +26,7 @@ class ClothesController {
         }
     }
 
-    // Recusively iterates through a list of objects with the type Clothes[] interface and adds 1 to the
+    // Recursively iterates through a list of objects with the type Clothes[] interface and adds 1 to the
     // totalStock variable in case is true.
     private async getTotalStockBySizeRecursive(clothes: Clothes[], index: number= 0, totalStock: number = 0): Promise<number>{
         if (index >= clothes.length){
@@ -35,7 +38,8 @@ class ClothesController {
         return this.getTotalStockBySizeRecursive(clothes, index + 1, totalStock);
     }
 
-
+    // Retrieves all Clothes from DB
+    // Sample endpoint: http://localhost:3010/api/getAll
     public async getAll(req: Request, res: Response): Promise<void> {
         try{
             await this.getDbInstance();
@@ -51,6 +55,8 @@ class ClothesController {
         }
     }
 
+    // Retrieves one clothes by ID
+    // Sample endpoint: http://localhost:3010/api/getById/66f11216367fcb9619fa6032
     public async getById(req: Request, res: Response): Promise<void> {
         try{
             await this.getDbInstance();
@@ -77,6 +83,9 @@ class ClothesController {
         }
     }
 
+    // Creates clothes item into MongoDB
+    // Sample endpoint: http://localhost:3010/api/createClothes
+    // Uses a body in the request
     public async createClothes(req: Request, res: Response): Promise<void> {
         try{
             await this.getDbInstance();
@@ -101,6 +110,9 @@ class ClothesController {
         }
     }
 
+    // Updates clothes item into MongoDB
+    // Sample endpoint: http://localhost:3010/api/updateClothes/66f11216367fcb9619fa6032
+    // Uses a body in the request
     public async updateClothes(req: Request, res: Response): Promise<void> {
         try{
             await this.getDbInstance();
@@ -132,6 +144,8 @@ class ClothesController {
         }
     }
 
+    // Deletes clothes item from MongoDB
+    // Sample endpoint: http://localhost:3010/api/deleteClothes/66f11216367fcb9619fa6032
     public async deleteClothes(req: Request, res: Response): Promise<void> {
         try{
             await this.getDbInstance();
@@ -155,6 +169,7 @@ class ClothesController {
         }
     }
 
+    // Retrieves clothes by size and calculates stock available
     public async getStockBySize(req: Request, res: Response): Promise<void> {
         try{
             await this.getDbInstance();

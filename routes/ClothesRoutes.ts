@@ -11,6 +11,8 @@ class ClothesRoutes {
         this. initializeRoutes();
     }
 
+    // Sets every endpoint for clothing API with the corresponding HTTP method.
+    // Calls controllers that handle middlewares wiht DB interaction
     private initializeRoutes() {
         this.router.get('/getAll', (req: Request, res: Response) => ClothesController.getAll(req, res));
         this.router.get('/getById/:id', (req: Request, res: Response) => ClothesController.getById(req, res));

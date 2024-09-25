@@ -8,7 +8,7 @@ class Database {
 
     constructor() {}
 
-
+    // Connects to MongoDB using MongoClient
     public async startDb(): Promise<void> {
         if (this.db) {
             console.log('Database is already initialized!');
@@ -24,6 +24,7 @@ class Database {
         }
     }
 
+    // Returns DB instance if exists
     public getDataBase(): Db {
         if(!this.db){
             throw new Error('Database not initialized');
