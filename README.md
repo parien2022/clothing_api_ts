@@ -4,7 +4,7 @@ This project is intended to provide a Clothing API that handles many endpoints f
 
 The software runs an API listening on a port and connected to a MongoDB, it waits for requests with different endpoints, then performs CURD operations and calulations depending on the request, it responses back with a successfull message or specific data, I have demonstrated the use of TS lenguage by declaring every type of variable, parameters and Promises that the software uses, I use ts-node to compile the TS into plain JS, so node can run the project correctly
 
-[Software Demo Video](http://youtube.link.goes.here)
+[Software Demo Video](https://drive.google.com/file/d/15CaWG9vnpk7dWFpaUA79l5FfdoAm40RM/view?usp=sharing)
 
 # Development Environment
 
